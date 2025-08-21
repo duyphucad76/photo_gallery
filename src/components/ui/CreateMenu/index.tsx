@@ -1,7 +1,11 @@
 import React from 'react';
 import type { MenuItem } from '../../../types/ui.types';
 
-const CreateMenu: React.FC<MenuItem[]> = (menuItems) => {
+interface CreateMenuProps {
+  menuItems: MenuItem[]
+}
+
+const CreateMenu: React.FC<CreateMenuProps> = ({ menuItems }) => {
   return (
     <div className="absolute top-12 right-0 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
       <div className="py-2">

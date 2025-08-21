@@ -43,8 +43,6 @@ export interface LoadingSpinnerProps {
   text?: string;
 }
 
-export interface MenuItem {
-  icon: React.ElementType;
-  label: string;
-  divider?: boolean;
-}
+export type MenuItem =
+  | { divider: true }
+  | { divider?: false; icon: React.ElementType; label: string };

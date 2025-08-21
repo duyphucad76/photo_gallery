@@ -1,10 +1,15 @@
+import { Navigate } from "react-router-dom";
 import Login from "../pages/Login";
-import NotFound from "../pages/NotFound";
 
 const publicRoutes = [
-  { path: "/login", element: <Login /> },
-  { path: "*", element: <NotFound /> },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/login" replace />,
+  },
 ];
 
-
-export default publicRoutes
+export default publicRoutes;

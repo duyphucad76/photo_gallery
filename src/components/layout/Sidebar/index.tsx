@@ -11,8 +11,8 @@ import {
   Cloud
 } from 'lucide-react';
 
-
 import SidebarNavItem from '../../ui/SidebarItem';
+
 import type { SidebarItemI } from '../../../types/ui.types';
 
 const Sidebar: React.FC<{

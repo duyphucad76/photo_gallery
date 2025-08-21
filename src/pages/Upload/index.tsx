@@ -1,6 +1,7 @@
 const Upload = () => {
   return (
     <>
+      <h1>Upload</h1>
 
     </>
   )

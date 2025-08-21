@@ -41,11 +41,7 @@ const Header: React.FC<{
     { icon: Play, label: 'Video khoảnh khắc nổi bật' },
     { icon: Users, label: 'Ảnh động' },
     { icon: Share2, label: 'Chia sẻ với người thân' },
-    {
-      divider: true,
-      icon: 'symbol',
-      label: ''
-    },
+    { divider: true },
     { icon: Upload, label: 'Nhập ảnh' }
   ];
 

@@ -5,8 +5,9 @@ import SignInForm from '../../components/form/SignInForm';
 import SignUpForm from '../../components/form/SignUpForm';
 import { useFormValidation } from '../../hooks';
 import type { FormType, SignUpFormData, SignInFormData, FormErrors } from '../../types/auth.types';
-import { login } from '../../services/auth.service';
-import { useNavigate } from 'react-router';
+import { login as loginService } from '../../services/auth.service';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Login: React.FC = () => {
   const [currentForm, setCurrentForm] = useState<FormType>('signin');
@@ -21,8 +22,11 @@ const Login: React.FC = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const { validateSignUp, validateSignIn } = useFormValidation();
+
   const navigate = useNavigate()
+  const { setIsAuthenticated } = useAuth();
 
   const handleFormToggle = (form: FormType): void => {
     setCurrentForm(form);
@@ -67,13 +71,19 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await login(
-        signInData.username,
-        signInData.password
-      );
-      setSignInData({ username: '', password: '' });
-      setErrors({});
-      navigate('/')
+      // const res = await loginService(
+      //   signInData.username,
+      //   signInData.password
+      // );
+      const res = { accessToken: 'adsasdasadasda' }
+      // const token = res?.metadata?.tokens?.accessToken;
+      const token = res.accessToken
+
+      if (token) {
+        setIsAuthenticated(true); // ✅ cập nhật AuthContext
+        navigate("/", { replace: true }); // ✅ đổi route
+      }
+
     } catch (error) {
       console.error('Sign in error:', error);
     } finally {

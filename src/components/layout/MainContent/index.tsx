@@ -18,12 +18,16 @@ const MainContent: React.FC<MainContentProps> = ({
     <div className="flex-1 flex flex-col">
       <Header searchQuery={searchQuery} onSearchChange={onSearchChange} />
 
-      <div className="p-6 flex-1">
-        <Sidebar
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
-        <Outlet />
+      <div className="flex flex-1">
+        <aside className="w-64 border-r border-gray-200 p-4 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+          <Sidebar
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+        </aside>
+        <main className="flex-1 p-6 overflow-y-auto">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
