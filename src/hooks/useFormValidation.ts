@@ -15,9 +15,9 @@ const useFormValidation = (): ValidationHook => {
       errors.name = "Name must be at least 2 characters";
     }
 
-    if (!formData.username.trim()) {
+    if (!formData.email.trim()) {
       errors.username = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.username)) {
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.username = "Email is invalid";
     }
 

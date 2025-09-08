@@ -4,7 +4,7 @@ export interface SidebarItemI {
   id: string;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
-  active: boolean;
+  url: string;
 }
 
 export interface CategoryCardI {
@@ -44,5 +44,9 @@ export interface LoadingSpinnerProps {
 }
 
 export type MenuItem =
+  | {
+    icon: React.ElementType;
+    label: string;
+    url?: string;
+  }
   | { divider: true }
-  | { divider?: false; icon: React.ElementType; label: string };

@@ -1,14 +1,14 @@
 import { Navigate } from "react-router-dom";
-import Login from "../pages/Login";
+import Auth from "../pages/Auth";
 
 const publicRoutes = [
   {
-    path: "/login",
-    element: <Login />,
+    path: "/auth",
+    element: <Auth />,
   },
   {
     path: "*",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/auth" replace />,
   },
 ];
 

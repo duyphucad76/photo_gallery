@@ -1,11 +1,14 @@
 import React from 'react';
 import type { MenuItem } from '../../../types/ui.types';
+import { useNavigate } from 'react-router';
 
 interface CreateMenuProps {
-  menuItems: MenuItem[]
+  menuItems: MenuItem[];
+  onItemClick?: (item: MenuItem) => void;
 }
 
-const CreateMenu: React.FC<CreateMenuProps> = ({ menuItems }) => {
+const CreateMenu: React.FC<CreateMenuProps> = ({ menuItems, onItemClick }) => {
+  const navigate = useNavigate()
   return (
     <div className="absolute top-12 right-0 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
       <div className="py-2">
@@ -14,6 +17,7 @@ const CreateMenu: React.FC<CreateMenuProps> = ({ menuItems }) => {
             <div key={idx} className="border-t border-gray-200 my-2"></div>
           ) : (
             <button
+              onClick={() => item.url ? navigate(item.url) : onItemClick?.(item)}
               key={idx}
               className="flex items-center gap-3 w-full px-4 py-2 hover:bg-gray-100"
             >

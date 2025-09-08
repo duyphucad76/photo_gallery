@@ -1,57 +1,145 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import PhotoCard from "../../components/photo/PhotoCard";
+import { getAllImages, deleteImage, addFavoriteImages, removeFavoriteImages } from "../../services/images.service";
+import { useOutletContext } from "react-router-dom";
 
-type Photo = {
-  _id: string;
-  url: string;
-  description?: string;
-};
+interface OutletContext {
+  searchQuery: string;
+}
+interface ImageI {
+  id: string;
+  secureUrl: string;
+  alt?: string;
+  isLiked?: boolean; // ✅ backend trả về có thể có field này
+}
 
 const Gallery = () => {
-  const [photos, setPhotos] = useState<Photo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState<ImageI[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [removeMode, setRemoveMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { searchQuery } = useOutletContext<OutletContext>();
 
   useEffect(() => {
-    const fetchPhotos = async () => {
+    const fetchImages = async () => {
+      setLoading(true);
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/photos', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setPhotos(res.data);
-      } catch (err) {
-        alert('Không thể tải ảnh');
-        console.error(err)
+        const res = await getAllImages(searchQuery);
+        setImages(res.images);
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
     };
+    fetchImages();
+  }, [searchQuery]);
 
-    fetchPhotos();
-  }, []);
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
+  const handleDelete = async () => {
+    if (selectedIds.length === 0) return;
+    try {
+      for (const photoId of selectedIds) {
+        await deleteImage(photoId);
+      }
+      setImages((prev) => prev.filter((img) => !selectedIds.includes(img.id)));
+      setSelectedIds([]);
+      setRemoveMode(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // ✅ Gọi API like/unlike
+  const toggleLike = async (id: string, isLiked: boolean | undefined) => {
+    try {
+      if (isLiked) {
+        await removeFavoriteImages([id]);
+      } else {
+        await addFavoriteImages([id]);
+      }
+      // cập nhật state local
+      setImages((prev) =>
+        prev.map((img) =>
+          img.id === id ? { ...img, isLiked: !isLiked } : img
+        )
+      );
+    } catch (e) {
+      console.error("Lỗi khi gọi API like/unlike:", e);
+    }
+  };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4 text-center">Thư viện ảnh</h2>
+    <div className="p-6">
+      {/* Nút xóa */}
+      <div className="flex gap-3 mb-4">
+        <button
+          onClick={() => setRemoveMode(!removeMode)}
+          className={`px-3 py-1 rounded ${
+            removeMode ? "bg-red-500 text-white" : "bg-gray-200"
+          }`}
+        >
+          {removeMode ? "Thoát chế độ xóa" : "Xóa ảnh"}
+        </button>
+        {removeMode && selectedIds.length > 0 && (
+          <button
+            onClick={handleDelete}
+            className="ml-auto px-4 py-1 rounded bg-green-500 text-white"
+          >
+            Xóa {selectedIds.length} ảnh
+          </button>
+        )}
+      </div>
+
+      {/* Grid ảnh */}
       {loading ? (
-        <p className="text-center">Đang tải ảnh...</p>
+        <p>Đang tải...</p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {photos.map((photo) => (
-            <div key={photo._id} className="border rounded overflow-hidden shadow-sm">
-              <img
-                src={photo.url}
-                alt={photo.description || 'Ảnh'}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-2 text-sm text-gray-600">{photo.description}</div>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {images.map((image) => {
+            const isSelected = selectedIds.includes(image.id);
+            const isLiked = image.isLiked ?? false;
+
+            return (
+              <div
+                key={image.id}
+                className={`relative rounded-lg overflow-hidden border-4 ${
+                  isSelected
+                    ? "border-red-500"
+                    : "border-transparent hover:border-gray-300"
+                } ${removeMode ? "cursor-pointer" : ""}`}
+                onClick={() => removeMode && toggleSelect(image.id)}
+              >
+                <PhotoCard secureUrl={image.secureUrl} alt={image.alt} />
+
+                {/* ✅ nút thích */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // tránh xung đột với chế độ xóa
+                    toggleLike(image.id, isLiked);
+                  }}
+                  className="absolute top-2 right-2 bg-white/70 rounded-full p-2 shadow hover:scale-110 transition"
+                >
+                  {isLiked ? "❤️" : "🤍"}
+                </button>
+
+                {isSelected && (
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white text-lg font-bold">
+                    ✓
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 };
 
-
-export default Gallery
+export default Gallery;

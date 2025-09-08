@@ -1,14 +1,27 @@
-export interface PhotoI {
+export interface Photo {
   id: string;
-  src: string;
-  title: string;
-  date: string;
-  category: "beautiful" | "moments" | "people" | "places" | "things";
-  type: "image" | "video";
+  secureUrl: string;
+  tags: string[];
+  album?: {
+    id: string;
+    title: string
+  };
 }
 
 export interface PhotoGroupI {
   month: string;
   year: string;
-  photos: PhotoI[];
+  photos: Photo[];
+}
+
+export interface PhotoCardI {
+  src: string;
+  title?: string;
+  description?: string;
+  onClick?: () => void;
+}
+
+export interface AlbumGridI {
+  photos: Photo[];
+  onPhotoClick?: (photo: Photo) => void;
 }

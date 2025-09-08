@@ -1,32 +1,26 @@
 import { Outlet } from "react-router-dom";
 import Header from "../Header";
-import Sidebar from '../Sidebar';
-import { useState } from 'react';
+import Sidebar from "../Sidebar";
+import { useState } from "react";
 
-interface MainContentProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-}
-
-const MainContent: React.FC<MainContentProps> = ({
-  searchQuery,
-  onSearchChange,
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('photos');
+const MainContent: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("photos");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   return (
     <div className="flex-1 flex flex-col">
-      <Header searchQuery={searchQuery} onSearchChange={onSearchChange} />
+      <Header searchQuery={searchQuery} onSearch={setSearchQuery} />;
 
       <div className="flex flex-1">
-        <aside className="w-64 border-r border-gray-200 p-4 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+        <aside className="border-r border-gray-200 p-4 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
           <Sidebar
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
+            defaultSelected={selectedCategory}
+            onSelect={setSelectedCategory}
           />
         </aside>
+
         <main className="flex-1 p-6 overflow-y-auto">
-          <Outlet />
+          <Outlet context={{ searchQuery }} />
         </main>
       </div>
     </div>

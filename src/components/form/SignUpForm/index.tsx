@@ -36,7 +36,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         name="name"
         value={formData.name}
         onChange={handleInputChange}
-        placeholder="Full Name"
+        placeholder="Username"
         icon={UserIcon}
         error={errors.name}
       />

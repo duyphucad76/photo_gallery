@@ -2,8 +2,9 @@ import MainContent from "../components/layout/MainContent";
 import Gallery from "../pages/Gallery";
 import Upload from "../pages/Upload";
 import type { RouteConfig } from '../utils/renderRoutes';
-import { Navigate } from 'react-router-dom';
-import Home from '../pages/Home';
+import Albums from "../pages/Albums";
+import AlbumDetail from "../pages/AlbumDetail";
+import Favorites from "../pages/Favorites";
 
 const searchQuery = "";
 const onSearchChange = () => { };
@@ -17,16 +18,13 @@ const privateRoutes: RouteConfig[] = [
     children: [
       {
         index: true,
-        element: <Home />
+        element: <Gallery />
       },
-      { path: "gallery", element: <Gallery /> },
+      { path: "albums", element: <Albums /> },
+      { path: "albums/:albumId", element: <AlbumDetail /> },
       { path: "upload", element: <Upload /> },
-
+      { path: "favorites", element: <Favorites /> },
     ]
-  },
-  {
-    path: "*",
-    element: <Navigate to="/login" replace />,
   }
 ];
 

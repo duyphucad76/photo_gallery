@@ -5,21 +5,25 @@ import SignInForm from '../../components/form/SignInForm';
 import SignUpForm from '../../components/form/SignUpForm';
 import { useFormValidation } from '../../hooks';
 import type { FormType, SignUpFormData, SignInFormData, FormErrors } from '../../types/auth.types';
-import { login as loginService } from '../../services/auth.service';
+import { login as loginService, register } from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const Login: React.FC = () => {
+
+
+const Auth: React.FC = () => {
   const [currentForm, setCurrentForm] = useState<FormType>('signin');
   const [signUpData, setSignUpData] = useState<SignUpFormData>({
     name: '',
-    username: '',
+    email: '',
     password: ''
   });
   const [signInData, setSignInData] = useState<SignInFormData>({
     username: '',
     password: ''
   });
+  const { setAvatar } = useAuth()
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -44,14 +48,16 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const res = await register(
+        signUpData.name,
+        signUpData.email,
+        signUpData.password
+      );
 
       console.log('Sign up data:', signUpData);
-      alert('Account created successfully! Welcome aboard!');
 
-      setSignUpData({ name: '', username: '', password: '' });
-      setErrors({});
+      console.log(res)
+
     } catch (error) {
       console.error('Sign up error:', error);
       alert('An error occurred during sign up. Please try again.');
@@ -71,17 +77,18 @@ const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // const res = await loginService(
-      //   signInData.username,
-      //   signInData.password
-      // );
-      const res = { accessToken: 'adsasdasadasda' }
-      // const token = res?.metadata?.tokens?.accessToken;
-      const token = res.accessToken
+      const res = await loginService(
+        signInData.username,
+        signInData.password
+      );
 
-      if (token) {
-        setIsAuthenticated(true); // ✅ cập nhật AuthContext
-        navigate("/", { replace: true }); // ✅ đổi route
+      const token = res?.metadata?.tokens?.accessToken;
+      const avatar = res?.metadata?.user?.avatar;
+      localStorage.setItem('accessToken', token)
+      setAvatar(avatar)
+      if (localStorage.getItem('accessToken')) {
+        setIsAuthenticated(true);
+        navigate("/", { replace: true });
       }
 
     } catch (error) {
@@ -152,4 +159,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login
+export default Auth

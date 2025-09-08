@@ -2,7 +2,7 @@ export type FormType = "signup" | "signin";
 
 export interface SignUpFormData {
   name: string;
-  username: string;
+  email: string;
   password: string;
 }
 
