@@ -47,7 +47,7 @@ export const logout = async () => {
 
     // Redirect
     window.location.href = "/login";
-  } catch (error: any) {
+  } catch (error) {
     console.error("Logout error:", error);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");

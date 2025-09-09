@@ -165,7 +165,7 @@ const Upload: React.FC<UploadPhotosAccumulateProps> = ({
 
   const handleUploadAll = async () => {
     if (items.length === 0) {
-      alert("Vui lòng chọn ít nhất một ảnh!");
+      alert("Vui lòng chọn ít nhất một file!");
       return;
     }
 
@@ -173,7 +173,7 @@ const Upload: React.FC<UploadPhotosAccumulateProps> = ({
     items.forEach((it) => {
       formData.append("files", it.file);
       formData.append("tags", it.tags);
-      formData.append("albumId", it.albumId.toString());
+      formData.append("albumId", String(it.albumId));
     });
 
     try {
@@ -195,15 +195,15 @@ const Upload: React.FC<UploadPhotosAccumulateProps> = ({
     <div className="w-full h-full flex flex-col bg-gray-50">
       {/* Header */}
       <div className="h-16 px-4 bg-white shadow flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Upload ảnh</h2>
+        <h2 className="text-lg font-semibold">Upload file</h2>
 
         <div className="flex items-center gap-2">
           <label className="inline-flex items-center px-3 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200 text-sm">
-            Chọn ảnh
+            Chọn file
             <input
               ref={inputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               multiple
               onChange={handleFileChange}
               onClick={handleInputClick}
@@ -235,37 +235,62 @@ const Upload: React.FC<UploadPhotosAccumulateProps> = ({
         <div className="flex-1 p-4 overflow-y-auto">
           {items.length === 0 ? (
             <div className="text-center text-gray-500 mt-8">
-              Chưa có ảnh nào được chọn
+              Chưa có file nào được chọn
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {items.map((it) => (
-                <div
-                  key={it.id}
-                  className="bg-white rounded shadow p-2 flex flex-col"
-                >
-                  <div className="relative">
-                    <img
-                      src={it.preview}
-                      className="w-full h-40 object-cover rounded"
-                    />
-                    <button
-                      onClick={() => handleRemove(it.id)}
-                      className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                      title="Xóa ảnh"
-                      type="button"
-                    >
-                      ✕
-                    </button>
-                  </div>
+              {items.map((it) => {
+                const isVideo = it.file.type.startsWith('video/');
+                
+                return (
+                  <div
+                    key={it.id}
+                    className="bg-white rounded shadow p-2 flex flex-col"
+                  >
+                    <div className="relative">
+                      {isVideo ? (
+                        <video
+                          src={it.preview}
+                          className="w-full h-40 object-cover rounded"
+                          controls
+                          preload="metadata"
+                        />
+                      ) : (
+                        <img
+                          src={it.preview}
+                          className="w-full h-40 object-cover rounded"
+                          alt="Preview"
+                        />
+                      )}
+                      
+                      {/* Icon để phân biệt video/ảnh */}
+                      {isVideo && (
+                        <div className="absolute top-2 left-2 bg-black/70 rounded-full p-1">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 5v10l7-5-7-5z" />
+                          </svg>
+                        </div>
+                      )}
+                      
+                      <button
+                        onClick={() => handleRemove(it.id)}
+                        className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                        title="Xóa file"
+                        type="button"
+                      >
+                        ✕
+                      </button>
+                    </div>
 
-                  <div className="mt-2 text-xs text-gray-600">
-                    {it.tags ? `Tags: ${it.tags}` : "Chưa có tag"}
-                    <br />
-                    {it.albumId ? `Album: ${it.albumId}` : "Chưa chọn album"}
+                    <div className="mt-2 text-xs text-gray-600">
+                      <div className="font-medium">{isVideo ? '🎥 Video' : '🖼️ Ảnh'}</div>
+                      {it.tags ? `Tags: ${it.tags}` : "Chưa có tag"}
+                      <br />
+                      {it.albumId ? `Album: ${it.albumId}` : "Chưa chọn album"}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

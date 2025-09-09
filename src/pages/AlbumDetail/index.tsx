@@ -4,7 +4,7 @@ import {
   getAllImagesInAlbum,
 } from "../../services/albums.service";
 
-import type { Photo } from "../../types/photo.types";
+import type { PhotoI as Photo } from "../../types/photo.types";
 
 import { addImageToAlbum, getAllImages, removeImageFromAlbum } from "../../services/images.service";
 
@@ -82,14 +82,14 @@ const AlbumDetail: React.FC = () => {
           className={`px-3 py-1 rounded ${mode === "add" ? "bg-blue-500 text-white" : "bg-gray-200"
             }`}
         >
-          Thêm ảnh
+          Thêm file
         </button>
         <button
           onClick={() => setMode("remove")}
           className={`px-3 py-1 rounded ${mode === "remove" ? "bg-red-500 text-white" : "bg-gray-200"
             }`}
         >
-          Xóa ảnh
+          Xóa file
         </button>
 
         {selectedPhotoIds.length > 0 && (
@@ -102,11 +102,12 @@ const AlbumDetail: React.FC = () => {
         )}
       </div>
 
-      {/* Danh sách ảnh */}
+      {/* Danh sách ảnh và video */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {photosToRender.map((photo) => {
           const isSelected = selectedPhotoIds.includes(photo.id);
           const isSelectable = mode !== null; // chỉ cho chọn khi đang ở chế độ add/remove
+          const isVideo = photo.format && ['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(photo.format.toLowerCase());
 
           return (
             <div
@@ -117,11 +118,31 @@ const AlbumDetail: React.FC = () => {
                 : "border-transparent hover:border-gray-300"
                 } ${isSelectable ? "cursor-pointer" : ""}`}
             >
-              <img
-                src={photo.secureUrl}
-                alt={'Image'}
-                className="w-full h-40 object-cover"
-              />
+              {/* Hiển thị video hoặc ảnh */}
+              {isVideo ? (
+                <video
+                  src={photo.secureUrl}
+                  className="w-full h-40 object-cover"
+                  controls
+                  preload="metadata"
+                />
+              ) : (
+                <img
+                  src={photo.secureUrl}
+                  alt={'Image'}
+                  className="w-full h-40 object-cover"
+                />
+              )}
+
+              {/* Icon để phân biệt video/ảnh */}
+              {isVideo && (
+                <div className="absolute top-2 left-2 bg-black/70 rounded-full p-1">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 5v10l7-5-7-5z" />
+                  </svg>
+                </div>
+              )}
+
               {isSelected && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white text-lg font-bold">
                   ✓

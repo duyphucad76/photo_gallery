@@ -6,7 +6,7 @@ import { useAuth } from './context/AuthContext';
 
 function App() {
   const { isAuthenticated } = useAuth();
-
+console.log(import.meta.env.VITE_REACT_BACKEND_BASEURL);
   return (
     <div className="flex h-screen bg-white">
       <Routes>

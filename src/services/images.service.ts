@@ -1,11 +1,11 @@
 import axiosInstance from "./http";
 
-export const getAllImages = async (query?: string) => {
-  const res = await axiosInstance.get("/images/?", { params: { search: query } });
+export const getAllImages = async (search?: string,page?:number,limit?:number) => {
+  const res = await axiosInstance.get("/images/?", { params: { search, page, limit } });
   return res.data.metadata;
 };
 
-export const uploadImages = async (formData: any) => {
+export const uploadImages = async (formData: FormData) => {
   const res = await axiosInstance.post("/images/upload", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
