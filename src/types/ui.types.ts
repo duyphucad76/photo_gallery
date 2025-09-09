@@ -7,19 +7,13 @@ export interface SidebarItemI {
   url: string;
 }
 
-export interface CategoryCardI {
-  id: string;
-  name: string;
-  icon: string;
-}
-
 export type ButtonVariant = "primary" | "secondary" | "outline";
 
 export interface IconProps {
   className?: string;
 }
 
-export interface InputFieldProps {
+export interface InputFieldPropsI {
   type?: string;
   name: string;
   value: string;
@@ -29,7 +23,7 @@ export interface InputFieldProps {
   error?: string;
 }
 
-export interface ButtonProps {
+export interface ButtonPropsI {
   children: ReactNode;
   onClick?: () => void;
   type?: "button" | "submit";
@@ -39,7 +33,7 @@ export interface ButtonProps {
   fullWidth?: boolean;
 }
 
-export interface LoadingSpinnerProps {
+export interface LoadingSpinnerPropsI {
   text?: string;
 }
 

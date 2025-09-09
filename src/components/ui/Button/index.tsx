@@ -1,6 +1,6 @@
-import type { ButtonProps, ButtonVariant } from '../../../types/ui.types';
+import type { ButtonPropsI, ButtonVariant } from '../../../types/ui.types';
 
-const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonPropsI> = ({
   children,
   onClick,
   type = 'button',

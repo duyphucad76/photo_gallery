@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import PhotoCard from "../../components/photo/PhotoCard";
 import { getAllImages, deleteImage, addFavoriteImages, removeFavoriteImages } from "../../services/images.service";
 import { useOutletContext } from "react-router-dom";
+import type { PhotoI } from "../../types/photo.types";
 
 interface OutletContext {
   searchQuery: string;
 }
-interface ImageI {
-  id: string;
-  secureUrl: string;
+interface ImageI extends PhotoI {
   alt?: string;
-  isLiked?: boolean; // ✅ backend trả về có thể có field này
+  isLiked?: boolean;
 }
 
 const Gallery = () => {
@@ -55,7 +54,7 @@ const Gallery = () => {
     }
   };
 
-  // ✅ Gọi API like/unlike
+  // Gọi API like/unlike
   const toggleLike = async (id: string, isLiked: boolean | undefined) => {
     try {
       if (isLiked) {

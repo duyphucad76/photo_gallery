@@ -40,7 +40,6 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
 
   return (
     <div className="rounded-xl shadow-md overflow-hidden hover:shadow-lg transition bg-white">
-      {/* Cover */}
       <div
         className="grid grid-cols-2 grid-rows-2 h-40 cursor-pointer"
         onClick={() => navigate(`/albums/${id}`, { state: { title } })}
@@ -55,7 +54,6 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
         )}
       </div>
 
-      {/* Content */}
       <div className="p-3 flex justify-between items-center">
         <div>
           <h3 className="text-lg font-semibold">{title}</h3>

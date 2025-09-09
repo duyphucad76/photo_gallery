@@ -1,4 +1,4 @@
-export interface Photo {
+export interface PhotoI {
   id: string;
   secureUrl: string;
   tags: string[];
@@ -6,22 +6,4 @@ export interface Photo {
     id: string;
     title: string
   };
-}
-
-export interface PhotoGroupI {
-  month: string;
-  year: string;
-  photos: Photo[];
-}
-
-export interface PhotoCardI {
-  src: string;
-  title?: string;
-  description?: string;
-  onClick?: () => void;
-}
-
-export interface AlbumGridI {
-  photos: Photo[];
-  onPhotoClick?: (photo: Photo) => void;
 }
