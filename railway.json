@@ -5,15 +5,13 @@
     "nixpacksPlan": {
       "providers": ["node"],
       "phases": {
-        "setup": { "nixPkgs": ["caddy"] },
         "install": { "cmds": ["npm ci"] },
         "build": { "cmds": ["npm run build"] }
       }
     }
   },
   "deploy": {
-    "startCommand": "vite preview --host 0.0.0.0 --port $PORT",
-
+    "startCommand": "npm run start",
     "healthcheckPath": "/",
     "restartPolicyType": "ON_FAILURE"
   }
